@@ -58,6 +58,14 @@ class Api {
           .then(this._getJson);
     }
 
+    changeLikeCardStatus(id, isLiked) {
+        if (isLiked) {
+          return this.setLike(id);
+        } else {
+          return this.deleteLike(id);
+        }
+      }
+
     getCurrentUser() {
         return fetch(`${this._basePath}/users/me`, {
             headers: this._getHeaders(),
