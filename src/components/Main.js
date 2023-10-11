@@ -1,27 +1,28 @@
 import React from "react";
-import api from "../utils/Api";
+//import api from "../utils/Api";
 import Card from "./Card";
+import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick}) {
-  const [userName, setUserName] = React.useState("");
-  const [userDescription, setUserDescription] = React.useState("");
-  const [userAvatar, setUserAvatar] = React.useState("");
-  const [cards, setCards] = React.useState([]);
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onCardLike, onCardDelete}) {
+  //const [userName, setUserName] = React.useState("");
+  //const [userDescription, setUserDescription] = React.useState("");
+  //const [userAvatar, setUserAvatar] = React.useState("");
+  //const [cards, setCards] = React.useState([]);
+  const currentUser = React.useContext(CurrentUserContext);
 
-React.useEffect(() => {
-  Promise.all([api.getCurrentUser(), api.getInitialCards()])
-    .then(([data, cards]) => {
-      setUserName(data.name);
-      setUserDescription(data.about);
-      setUserAvatar(data.avatar);
-      setCards(cards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  
+// React.useEffect(() => {
+//   api
+//     .getInitialCards()
+//     .then((cards) => {
+//       //setUserName(data.name);
+//       //setUserDescription(data.about);
+//       //setUserAvatar(data.avatar);
+//       setCards(cards);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//   }, []);
 
   return (
     <main className="main">
@@ -29,8 +30,7 @@ React.useEffect(() => {
         <div className="profile__avatar-container">
           <img
             className="profile__avatar"
-            src={userAvatar}
-            //style={{ backgroundImage: `url(${userAvatar})` }}
+            src={currentUser.avatar}
             alt="Аватар пользователя"
           />
           <button
@@ -43,7 +43,7 @@ React.useEffect(() => {
         <div className="profile__info">
           <div className="profile__item">
             <h1 className="profile__name">
-              {userName}
+              {currentUser.name}
               </h1>
             <button
               className="profile__edit-button"
@@ -52,7 +52,7 @@ React.useEffect(() => {
             ></button>
           </div>
           <p className="profile__job">
-            {userDescription}
+            {currentUser.about}
             </p>
         </div>
         <button
@@ -67,6 +67,8 @@ React.useEffect(() => {
               card={card}
               onCardClick={onCardClick}
               key={card._id}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
             />
           ))}
         </ul>
